@@ -1,15 +1,15 @@
 # This is to create Vms in app environment (dev,test,prod)
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  count                = var.vm_count
-  name                 = "vm-${element(var.envs, count.index)}-${count.index + 1}"
-  location             = azurerm_resource_group.petGroup.location
-  resource_group_name  = azurerm_resource_group.petGroup.name
+  count               = var.vm_count
+  name                = "vm-${element(var.envs, count.index)}-${count.index + 1}"
+  location            = azurerm_resource_group.petGroup.location
+  resource_group_name = azurerm_resource_group.petGroup.name
   network_interface_ids = [
     azurerm_network_interface.nic[count.index].id,
   ]
-  size                 = "Standard_DS1_v2"
-  admin_username       = "adminuser"
+  size           = "Standard_DS1_v2"
+  admin_username = "adminuser"
 
   os_disk {
     caching              = "ReadWrite"
@@ -41,7 +41,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 # }
 
 resource "azurerm_postgresql_server" "db" {
-  count                = var.vm_count
+  count               = var.vm_count
   name                = "postgress-${element(var.envs, count.index)}-${count.index + 1}"
   location            = azurerm_resource_group.petGroup.location
   resource_group_name = azurerm_resource_group.petGroup.name
@@ -57,7 +57,7 @@ resource "azurerm_postgresql_server" "db" {
   geo_redundant_backup_enabled = false
   auto_grow_enabled            = true
 
-  public_network_access_enabled    = true
+  public_network_access_enabled    = false
   ssl_enforcement_enabled          = true
   ssl_minimal_tls_version_enforced = "TLS1_2"
 }
@@ -71,7 +71,7 @@ resource "azurerm_postgresql_firewall_rule" "allowed_ips" {
 
   start_ip_address = azurerm_public_ip.pip[count.index].ip_address
 
-  end_ip_address   = azurerm_public_ip.pip[count.index].ip_address
+  end_ip_address = azurerm_public_ip.pip[count.index].ip_address
 }
 
 # resource "azurerm_network_security_group" "nsg_db" {
