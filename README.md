@@ -1,5 +1,5 @@
 
-Infrastructure Setup
+# Infrastructure Setup
 
 This repository is used to create the resources in the following picture.
 
